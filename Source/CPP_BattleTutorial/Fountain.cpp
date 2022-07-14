@@ -19,12 +19,12 @@ AFountain::AFountain()
 
 	RootComponent = Body;
 	Water->SetupAttachment(Body);
-	//Light->SetupAttachment(Body);
+	Light->SetupAttachment(Body);
 	Splash->SetupAttachment(Body);
 
 
 	Water->SetRelativeLocation(FVector(0.f, 0.f, 135.f));
-	//Light->SetRelativeLocation(FVector(0.f, 0.f, 135.f));
+	Light->SetRelativeLocation(FVector(0.f, 0.f, 195.f));
 	Splash->SetRelativeLocation(FVector(0.f, 0.f, 195.f));
 
 
@@ -32,6 +32,16 @@ AFountain::AFountain()
 	if (SM_BODY.Succeeded())
 	{
 		Body->SetStaticMesh(SM_BODY.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>SM_WATER(TEXT("/Game/InfinityBladeGrassLands/Effects/FX_Meshes/Env/SM_Plains_Fountain_02.SM_Plains_Fountain_02"));
+	if (SM_WATER.Succeeded())
+	{
+		Water->SetStaticMesh(SM_WATER.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UParticleSystem>PS_SPALSH(TEXT("/Game/InfinityBladeGrassLands/Effects/FX_Ambient/Water/P_Water_Fountain_Splash_Base_01.P_Water_Fountain_Splash_Base_01"));
+	if (PS_SPALSH.Succeeded())
+	{
+		Splash->SetTemplate(PS_SPALSH.Object);
 	}
 }
 

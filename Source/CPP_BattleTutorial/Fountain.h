@@ -16,6 +16,8 @@ public:
 	AFountain();
 
 public:
+	UPROPERTY(EditAnyWhere, Category = ID)
+	int32 ID;
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Water;
