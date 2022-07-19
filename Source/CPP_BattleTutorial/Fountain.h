@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditAnyWhere, Category = ID)
 	int32 ID;
 
+	UPROPERTY(EditAnywhere, Category = Stat, Meta = (AllowPrivateAccess = true))
+	float RotateSpeed;
+
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Water;
 
@@ -30,6 +33,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	class UParticleSystemComponent* Splash;
+
+	UPROPERTY(VisibleAnywhere)
+	class URotatingMovementComponent* Movement;
 
 
 protected:
