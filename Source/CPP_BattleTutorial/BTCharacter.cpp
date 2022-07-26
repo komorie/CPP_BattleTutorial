@@ -2,6 +2,9 @@
 
 
 #include "BTCharacter.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
 
 // Sets default values
 ABTCharacter::ABTCharacter()
@@ -9,12 +12,19 @@ ABTCharacter::ABTCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PlayerModel(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
 
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
+	SpringArm->SetupAttachment(RootComponent);
+
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
+	Camera->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PlayerModel(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
 	if (PlayerModel.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(PlayerModel.Object);
 	}
+	
 }
 
 // Called when the game starts or when spawned

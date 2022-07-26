@@ -11,6 +11,15 @@ class CPP_BATTLETUTORIAL_API ABTCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	class UCameraComponent* Camera;
+
+
+
 public:
 	// Sets default values for this character's properties
 	ABTCharacter();
