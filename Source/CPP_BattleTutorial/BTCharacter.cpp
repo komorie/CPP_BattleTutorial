@@ -15,9 +15,11 @@ ABTCharacter::ABTCharacter()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 100.f), FRotator(0.f, -90.f, 0.f));
+	SpringArm->TargetArmLength = 400.f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
-	Camera->SetupAttachment(RootComponent);
+	Camera->SetupAttachment(SpringArm);
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PlayerModel(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
 	if (PlayerModel.Succeeded())
@@ -46,5 +48,13 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void ABTCharacter::MoveUp()
+{
+}
+
+void ABTCharacter::MoveRight()
+{
 }
 

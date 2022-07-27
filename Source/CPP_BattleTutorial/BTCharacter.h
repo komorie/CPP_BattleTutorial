@@ -12,10 +12,10 @@ class CPP_BATTLETUTORIAL_API ABTCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(EditAnywhere, Category = Camera)
 	class USpringArmComponent* SpringArm;
 
-	UPROPERTY(VisibleAnywhere, Category = Camera)
+	UPROPERTY(EditAnywhere, Category = Camera)
 	class UCameraComponent* Camera;
 
 
@@ -34,5 +34,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void MoveUp();
+
+	void MoveRight();
 
 };
