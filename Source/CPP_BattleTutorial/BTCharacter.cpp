@@ -15,17 +15,18 @@ ABTCharacter::ABTCharacter()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 100.f), FRotator(0.f, -90.f, 0.f));
 	SpringArm->TargetArmLength = 400.f;
+	SpringArm->SetRelativeRotation(FRotator(-15.f, 0.f, 0.f));
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	Camera->SetupAttachment(SpringArm);
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PlayerModel(TEXT("SkeletalMesh'/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin'"));
-	if (PlayerModel.Succeeded())
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_CARDBOARD(TEXT("SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
+	if (SK_CARDBOARD.Succeeded())
 	{
-		GetMesh()->SetSkeletalMesh(PlayerModel.Object);
+		GetMesh()->SetSkeletalMesh(SK_CARDBOARD.Object);
 	}
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
 	
 }
 
@@ -48,13 +49,17 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &ABTCharacter::UpDown);
+	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &ABTCharacter::LeftRight);
 }
 
-void ABTCharacter::MoveUp()
+void ABTCharacter::UpDown(float value)
 {
+	AddMovementInput(GetActorForwardVector(), value);
 }
 
-void ABTCharacter::MoveRight()
+void ABTCharacter::LeftRight(float value)
 {
+	AddMovementInput(GetActorRightVector(), value);
 }
 

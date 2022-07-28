@@ -11,15 +11,6 @@ class CPP_BATTLETUTORIAL_API ABTCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(EditAnywhere, Category = Camera)
-	class USpringArmComponent* SpringArm;
-
-	UPROPERTY(EditAnywhere, Category = Camera)
-	class UCameraComponent* Camera;
-
-
-
 public:
 	// Sets default values for this character's properties
 	ABTCharacter();
@@ -35,8 +26,18 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void MoveUp();
+private:
+	UFUNCTION()
+	void UpDown(float value);
 
-	void MoveRight();
+	UFUNCTION()
+	void LeftRight(float value);
+
+private:
+	UPROPERTY(EditAnywhere, Category = Camera)
+	class USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere, Category = Camera)
+	class UCameraComponent* Camera;
 
 };
