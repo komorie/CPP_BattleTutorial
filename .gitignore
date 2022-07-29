@@ -74,5 +74,5 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 
 unreal-c-example-4.22v/*
-
 *.ipch
+*.zip

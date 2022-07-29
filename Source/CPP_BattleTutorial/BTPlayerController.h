@@ -13,5 +13,8 @@ UCLASS()
 class CPP_BATTLETUTORIAL_API ABTPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void BeginPlay() override;
+
 };

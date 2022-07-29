@@ -9,7 +9,7 @@
 // Sets default values
 ABTCharacter::ABTCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 
@@ -27,7 +27,13 @@ ABTCharacter::ABTCharacter()
 		GetMesh()->SetSkeletalMesh(SK_CARDBOARD.Object);
 	}
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
-	
+
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(TEXT("/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
+	if (WARRIOR_ANIM.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(WARRIOR_ANIM.Class);
+	}
 }
 
 // Called when the game starts or when spawned

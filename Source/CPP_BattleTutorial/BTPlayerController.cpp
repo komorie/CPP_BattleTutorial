@@ -3,3 +3,10 @@
 
 #include "BTPlayerController.h"
 
+void ABTPlayerController::BeginPlay()
+{
+    Super::BeginPlay();
+
+    FInputModeGameOnly InputMode;
+    SetInputMode(InputMode);
+}
