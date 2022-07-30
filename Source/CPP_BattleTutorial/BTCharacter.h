@@ -30,8 +30,14 @@ private:
 	UFUNCTION()
 	void UpDown(float value);
 
-	UFUNCTION()
 	void LeftRight(float value);
+
+	void LookUp(float value);
+
+	void Turn(float value);
+
+protected:
+	void SetControlMode(int32 ControlMode);
 
 private:
 	UPROPERTY(EditAnywhere, Category = Camera)

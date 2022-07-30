@@ -4,6 +4,8 @@
 #include "BTCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 // Sets default values
@@ -14,7 +16,7 @@ ABTCharacter::ABTCharacter()
 
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
-	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->SetupAttachment(GetCapsuleComponent());
 	SpringArm->TargetArmLength = 400.f;
 	SpringArm->SetRelativeRotation(FRotator(-15.f, 0.f, 0.f));
 
@@ -34,6 +36,8 @@ ABTCharacter::ABTCharacter()
 	{
 		GetMesh()->SetAnimInstanceClass(WARRIOR_ANIM.Class);
 	}
+
+	SetControlMode(0);
 }
 
 // Called when the game starts or when spawned
@@ -57,15 +61,46 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAxis(TEXT("UpDown"), this, &ABTCharacter::UpDown);
 	PlayerInputComponent->BindAxis(TEXT("LeftRight"), this, &ABTCharacter::LeftRight);
+	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ABTCharacter::LookUp);
+	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ABTCharacter::Turn);
+
 }
 
 void ABTCharacter::UpDown(float value)
 {
-	AddMovementInput(GetActorForwardVector(), value);
+	AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X), value);
 }
 
 void ABTCharacter::LeftRight(float value)
 {
-	AddMovementInput(GetActorRightVector(), value);
+	AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y), value);
+}
+
+void ABTCharacter::LookUp(float value)
+{
+	AddControllerPitchInput(value);
+}
+
+void ABTCharacter::Turn(float value)
+{
+	AddControllerYawInput(value);
+}
+
+void ABTCharacter::SetControlMode(int32 ControlMode)
+{
+	//3인칭 카메라 이동
+	if (ControlMode == 0)
+	{
+		SpringArm->TargetArmLength = 450.0f;
+		SpringArm->bUsePawnControlRotation = true;
+		//SpringArm->bInheritPitch = true;
+		//SpringArm->bInheritRoll = true;
+		//SpringArm->bInheritYaw = true;
+		SpringArm->bDoCollisionTest = true;
+		bUseControllerRotationYaw = false;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
+
+	}
 }
 
