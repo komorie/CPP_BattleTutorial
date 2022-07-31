@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "BTCharacter.generated.h"
 
+UENUM()
+enum class EControlMode
+{
+	Shoulder,
+	Quarter,
+	NPC
+};
+
 UCLASS()
 class CPP_BATTLETUTORIAL_API ABTCharacter : public ACharacter
 {
@@ -37,7 +45,7 @@ private:
 	void Turn(float value);
 
 protected:
-	void SetControlMode(int32 ControlMode);
+	void SetControlMode(EControlMode NewControlMode);
 
 private:
 	UPROPERTY(EditAnywhere, Category = Camera)
@@ -45,5 +53,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, Category = Camera)
+	EControlMode CurrentControlMode;
 
 };

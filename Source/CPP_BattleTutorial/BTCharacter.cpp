@@ -37,7 +37,7 @@ ABTCharacter::ABTCharacter()
 		GetMesh()->SetAnimInstanceClass(WARRIOR_ANIM.Class);
 	}
 
-	SetControlMode(0);
+	SetControlMode(EControlMode::Quarter);
 }
 
 // Called when the game starts or when spawned
@@ -86,21 +86,39 @@ void ABTCharacter::Turn(float value)
 	AddControllerYawInput(value);
 }
 
-void ABTCharacter::SetControlMode(int32 ControlMode)
+void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 {
-	//3인칭 카메라 이동
-	if (ControlMode == 0)
-	{
-		SpringArm->TargetArmLength = 450.0f;
-		SpringArm->bUsePawnControlRotation = true;
-		//SpringArm->bInheritPitch = true;
-		//SpringArm->bInheritRoll = true;
-		//SpringArm->bInheritYaw = true;
-		SpringArm->bDoCollisionTest = true;
-		bUseControllerRotationYaw = false;
-		GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
+	CurrentControlMode = NewControlMode;
 
+
+	switch (CurrentControlMode)
+	{
+		//3인칭 카메라 이동
+		case EControlMode::Shoulder:
+		{
+			SpringArm->TargetArmLength = 450.0f;
+			SpringArm->bUsePawnControlRotation = true;
+			//SpringArm->bInheritPitch = true;
+			//SpringArm->bInheritRoll = true;
+			//SpringArm->bInheritYaw = true;
+			SpringArm->bDoCollisionTest = true;
+			bUseControllerRotationYaw = false;
+			GetCharacterMovement()->bOrientRotationToMovement = true;
+			GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.f, 0.0f);
+		}
+		break;
+		case EControlMode::Quarter:
+		{
+			SpringArm->TargetArmLength = 800.0f;
+			SpringArm->SetRelativeRotation(FRotator(-45.0f, 0.0f, 0.0f));
+			SpringArm->bUsePawnControlRotation = false;
+			SpringArm->bInheritPitch = false;
+			SpringArm->bInheritRoll = false;
+			SpringArm->bInheritYaw = false;
+			SpringArm->bDoCollisionTest = false;
+			bUseControllerRotationYaw = false;
+		}
+		break;
 	}
 }
 
