@@ -68,22 +68,40 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void ABTCharacter::UpDown(float value)
 {
-	AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X), value);
+	switch (CurrentControlMode) {
+	case EControlMode::Shoulder:
+		AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::X), value);
+		break;
+	case EControlMode::Quarter:
+		AddMovementInput(FVector::ForwardVector, value);
+		break;
+	}
 }
 
 void ABTCharacter::LeftRight(float value)
 {
-	AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y), value);
+	switch (CurrentControlMode) {
+	case EControlMode::Shoulder:
+		AddMovementInput(FRotationMatrix(GetControlRotation()).GetUnitAxis(EAxis::Y), value);
+		break;
+	case EControlMode::Quarter:
+		AddMovementInput(FVector::RightVector, value);
+		break;
+	}
 }
 
 void ABTCharacter::LookUp(float value)
 {
-	AddControllerPitchInput(value);
+	if (CurrentControlMode == EControlMode::Shoulder) {
+		AddControllerPitchInput(value);
+	}
 }
 
 void ABTCharacter::Turn(float value)
 {
-	AddControllerYawInput(value);
+	if (CurrentControlMode == EControlMode::Shoulder) {
+		AddControllerYawInput(value);
+	}
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
@@ -104,7 +122,7 @@ void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 			SpringArm->bDoCollisionTest = true;
 			bUseControllerRotationYaw = false;
 			GetCharacterMovement()->bOrientRotationToMovement = true;
-			GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.f, 0.0f);
+			GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
 		}
 		break;
 		case EControlMode::Quarter:
@@ -117,6 +135,8 @@ void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 			SpringArm->bInheritYaw = false;
 			SpringArm->bDoCollisionTest = false;
 			bUseControllerRotationYaw = false;
+			GetCharacterMovement()->bOrientRotationToMovement = true;
+			GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.f, 0.0f);
 		}
 		break;
 	}
