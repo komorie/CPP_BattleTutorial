@@ -64,6 +64,8 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ABTCharacter::LookUp);
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ABTCharacter::Turn);
 
+	PlayerInputComponent->BindAction(TEXT("ViewChange"), IE_Pressed , this, &ABTCharacter::ViewChange);
+
 }
 
 void ABTCharacter::UpDown(float value)
@@ -104,6 +106,16 @@ void ABTCharacter::Turn(float value)
 	}
 }
 
+void ABTCharacter::ViewChange()
+{
+	if (CurrentControlMode == EControlMode::Shoulder) {
+		SetControlMode(EControlMode::Quarter);
+	}
+	else if (CurrentControlMode == EControlMode::Quarter) {
+		SetControlMode(EControlMode::Shoulder);
+	}
+}
+
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 {
 	CurrentControlMode = NewControlMode;
@@ -116,9 +128,9 @@ void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 		{
 			SpringArm->TargetArmLength = 450.0f;
 			SpringArm->bUsePawnControlRotation = true;
-			//SpringArm->bInheritPitch = true;
-			//SpringArm->bInheritRoll = true;
-			//SpringArm->bInheritYaw = true;
+			SpringArm->bInheritPitch = true;
+			SpringArm->bInheritRoll = true;
+			SpringArm->bInheritYaw = true;
 			SpringArm->bDoCollisionTest = true;
 			bUseControllerRotationYaw = false;
 			GetCharacterMovement()->bOrientRotationToMovement = true;

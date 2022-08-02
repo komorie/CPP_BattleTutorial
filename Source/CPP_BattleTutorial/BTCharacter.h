@@ -44,6 +44,8 @@ private:
 
 	void Turn(float value);
 
+	void ViewChange();
+
 protected:
 	void SetControlMode(EControlMode NewControlMode);
 
