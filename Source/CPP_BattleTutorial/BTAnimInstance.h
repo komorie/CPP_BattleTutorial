@@ -13,5 +13,13 @@ UCLASS()
 class CPP_BATTLETUTORIAL_API UBTAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
+public:
+	UBTAnimInstance();
+
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
+	float CurrentPawnSpeed;
 };

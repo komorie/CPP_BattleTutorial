@@ -109,6 +109,7 @@ void ABTCharacter::Turn(float value)
 void ABTCharacter::ViewChange()
 {
 	if (CurrentControlMode == EControlMode::Shoulder) {
+		GetController()->SetControlRotation(GetActorRotation());
 		SetControlMode(EControlMode::Quarter);
 	}
 	else if (CurrentControlMode == EControlMode::Quarter) {
