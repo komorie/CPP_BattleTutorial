@@ -2,6 +2,8 @@
 
 
 #include "BTAnimInstance.h"
+#include "BTCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UBTAnimInstance::UBTAnimInstance()
 {
@@ -12,10 +14,15 @@ void UBTAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	auto PlayerCharacter = TryGetPawnOwner();
+	auto Pawn = TryGetPawnOwner();
 
-	if (IsValid(PlayerCharacter))
+	if (IsValid(Pawn))
 	{
-		CurrentPawnSpeed = PlayerCharacter->GetVelocity().Size();
+		CurrentPawnSpeed = Pawn->GetVelocity().Size();
+		if (Pawn)
+		{
+			auto PlayerCharacter = Cast<ACharacter>(Pawn);
+			IsFalling = PlayerCharacter->GetMovementComponent()->IsFalling();
+		}
 	}
 }

@@ -46,6 +46,8 @@ private:
 
 	void ViewChange();
 
+	void Jump();
+
 protected:
 	void SetControlMode(EControlMode NewControlMode);
 

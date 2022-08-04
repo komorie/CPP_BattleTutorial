@@ -38,6 +38,8 @@ ABTCharacter::ABTCharacter()
 	}
 
 	SetControlMode(EControlMode::Quarter);
+
+	GetCharacterMovement()->JumpZVelocity = 600.f;
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +67,7 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ABTCharacter::Turn);
 
 	PlayerInputComponent->BindAction(TEXT("ViewChange"), IE_Pressed , this, &ABTCharacter::ViewChange);
+	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ABTCharacter::Jump);
 
 }
 
@@ -115,6 +118,11 @@ void ABTCharacter::ViewChange()
 	else if (CurrentControlMode == EControlMode::Quarter) {
 		SetControlMode(EControlMode::Shoulder);
 	}
+}
+
+void ABTCharacter::Jump()
+{
+	Super::Jump();
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
