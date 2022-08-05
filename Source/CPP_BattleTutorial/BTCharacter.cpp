@@ -31,6 +31,7 @@ ABTCharacter::ABTCharacter()
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
 
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+
 	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(TEXT("/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
 	if (WARRIOR_ANIM.Succeeded())
 	{
