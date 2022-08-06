@@ -8,6 +8,13 @@
 UBTAnimInstance::UBTAnimInstance()
 {
 	CurrentPawnSpeed = 0.f;
+	IsFalling = false;
+	static ConstructorHelpers::FObjectFinder<UAnimMontage>ATTACK_MONTAGE(TEXT("AnimMontage'/Game/Book/Animations/WarriorAnimMontage.WarriorAnimMontage'"));
+	if (ATTACK_MONTAGE.Succeeded())
+	{
+		AttackMontage = ATTACK_MONTAGE.Object;
+	}
+
 }
 
 void UBTAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -24,5 +31,13 @@ void UBTAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			auto PlayerCharacter = Cast<ACharacter>(Pawn);
 			IsFalling = PlayerCharacter->GetMovementComponent()->IsFalling();
 		}
+	}
+}
+
+void UBTAnimInstance::PlayAttackMontage()
+{
+	if (!Montage_IsPlaying(AttackMontage))
+	{
+		Montage_Play(AttackMontage, 1.f);
 	}
 }

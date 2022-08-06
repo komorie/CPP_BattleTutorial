@@ -2,6 +2,7 @@
 
 
 #include "BTCharacter.h"
+#include "BTAnimInstance.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -69,7 +70,7 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAction(TEXT("ViewChange"), IE_Pressed , this, &ABTCharacter::ViewChange);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ABTCharacter::Jump);
-
+	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &ABTCharacter::Attack);
 }
 
 void ABTCharacter::UpDown(float value)
@@ -124,6 +125,14 @@ void ABTCharacter::ViewChange()
 void ABTCharacter::Jump()
 {
 	Super::Jump();
+}
+
+void ABTCharacter::Attack()
+{
+	if (auto AnimInstance = Cast<UBTAnimInstance>(GetMesh()->GetAnimInstance()))
+	{
+		AnimInstance->PlayAttackMontage();
+	}
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
