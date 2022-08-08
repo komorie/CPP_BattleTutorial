@@ -50,8 +50,16 @@ private:
 	
 	void Attack();
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 	void SetControlMode(EControlMode NewControlMode);
+
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	UFUNCTION()
+	void AnimNotify_AttackHitCheck();
 
 private:
 	UPROPERTY(EditAnywhere, Category = Camera)
@@ -62,5 +70,11 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Camera)
 	EControlMode CurrentControlMode;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, category = Attack, Meta = (AllowPrivateAccess = true))
+	bool IsAttacking;
+
+	UPROPERTY()
+	class UBTAnimInstance* BTAnim;
 
 };

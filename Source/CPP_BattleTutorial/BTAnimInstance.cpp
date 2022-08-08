@@ -36,8 +36,5 @@ void UBTAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UBTAnimInstance::PlayAttackMontage()
 {
-	if (!Montage_IsPlaying(AttackMontage))
-	{
-		Montage_Play(AttackMontage, 1.f);
-	}
+	Montage_Play(AttackMontage, 1.f);
 }

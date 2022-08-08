@@ -42,6 +42,8 @@ ABTCharacter::ABTCharacter()
 	SetControlMode(EControlMode::Quarter);
 
 	GetCharacterMovement()->JumpZVelocity = 600.f;
+
+	IsAttacking = false;
 }
 
 // Called when the game starts or when spawned
@@ -129,10 +131,19 @@ void ABTCharacter::Jump()
 
 void ABTCharacter::Attack()
 {
-	if (auto AnimInstance = Cast<UBTAnimInstance>(GetMesh()->GetAnimInstance()))
-	{
-		AnimInstance->PlayAttackMontage();
-	}
+	if (IsAttacking)
+		return;
+
+	BTAnim->PlayAttackMontage();
+	IsAttacking = true;
+}
+
+void ABTCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	BTAnim = Cast<UBTAnimInstance>(GetMesh()->GetAnimInstance());
+
+	BTAnim->OnMontageEnded.AddDynamic(this, &ABTCharacter::OnAttackMontageEnded);
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
@@ -171,5 +182,15 @@ void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 		}
 		break;
 	}
+}
+
+void ABTCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	IsAttacking = false;
+}
+
+void ABTCharacter::AnimNotify_AttackHitCheck()
+{
+
 }
 
