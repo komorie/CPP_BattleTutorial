@@ -38,3 +38,8 @@ void UBTAnimInstance::PlayAttackMontage()
 {
 	Montage_Play(AttackMontage, 1.f);
 }
+
+void UBTAnimInstance::AnimNotify_AttackHitCheck()
+{
+
+}

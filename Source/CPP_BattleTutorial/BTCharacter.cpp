@@ -189,8 +189,4 @@ void ABTCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted
 	IsAttacking = false;
 }
 
-void ABTCharacter::AnimNotify_AttackHitCheck()
-{
-
-}
 

@@ -58,9 +58,6 @@ protected:
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
-	UFUNCTION()
-	void AnimNotify_AttackHitCheck();
-
 private:
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class USpringArmComponent* SpringArm;
@@ -73,6 +70,9 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, category = Attack, Meta = (AllowPrivateAccess = true))
 	bool IsAttacking;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, category = Attack, Meta = (AllowPrivateAccess = true))
+	bool ComboInProgress;
 
 	UPROPERTY()
 	class UBTAnimInstance* BTAnim;
