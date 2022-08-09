@@ -44,6 +44,8 @@ ABTCharacter::ABTCharacter()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 
 	IsAttacking = false;
+	MaxCombo = 4;
+	AttackEndComboState();
 }
 
 // Called when the game starts or when spawned
@@ -132,10 +134,20 @@ void ABTCharacter::Jump()
 void ABTCharacter::Attack()
 {
 	if (IsAttacking)
-		return;
-
-	BTAnim->PlayAttackMontage();
-	IsAttacking = true;
+	{
+		if (CanNextCombo)
+		{
+			IsComboInputOn = true;
+		}
+	}
+	else
+	{
+		AttackStartComboState();
+		BTAnim->PlayAttackMontage();
+		BTAnim->JumpToAttackMontageSection(CurrentCombo);
+		IsAttacking = true;
+	}
+	UE_LOG(LogTemp, Log, TEXT("CurrentCombo: %d"), CurrentCombo);
 }
 
 void ABTCharacter::PostInitializeComponents()
@@ -144,6 +156,17 @@ void ABTCharacter::PostInitializeComponents()
 	BTAnim = Cast<UBTAnimInstance>(GetMesh()->GetAnimInstance());
 
 	BTAnim->OnMontageEnded.AddDynamic(this, &ABTCharacter::OnAttackMontageEnded);
+
+	BTAnim->OnNextAttackCheck.AddLambda([this]() -> void {
+		CanNextCombo = false;
+		UE_LOG(LogTemp, Log, TEXT("OnNextAttackCheck"));
+		if (IsComboInputOn)
+		{
+			AttackStartComboState();
+			BTAnim->JumpToAttackMontageSection(CurrentCombo);
+
+		}
+		});
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
@@ -187,6 +210,21 @@ void ABTCharacter::SetControlMode(EControlMode NewControlMode)
 void ABTCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 	IsAttacking = false;
+	AttackEndComboState();
+}
+
+void ABTCharacter::AttackStartComboState()
+{
+	CanNextCombo = true;
+	IsComboInputOn = false;
+	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
+}
+
+void ABTCharacter::AttackEndComboState()
+{
+	IsComboInputOn = false;
+	CanNextCombo = false;
+	CurrentCombo = 0;
 }
 
 

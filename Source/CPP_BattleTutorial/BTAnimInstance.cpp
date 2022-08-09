@@ -39,7 +39,22 @@ void UBTAnimInstance::PlayAttackMontage()
 	Montage_Play(AttackMontage, 1.f);
 }
 
+void UBTAnimInstance::JumpToAttackMontageSection(int32 NewSection)
+{
+	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), AttackMontage);
+}
+
 void UBTAnimInstance::AnimNotify_AttackHitCheck()
 {
+	OnAttackHitCheck.Broadcast();
+}
 
+void UBTAnimInstance::AnimNotify_NextAttackCheck()
+{
+	OnNextAttackCheck.Broadcast();
+}
+
+FName UBTAnimInstance::GetAttackMontageSectionName(int32 Section)
+{
+	return FName(*FString::Printf(TEXT("Attack%d"), Section));
 }
