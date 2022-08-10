@@ -12,7 +12,7 @@ UBTAnimInstance::UBTAnimInstance()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>ATTACK_MONTAGE(TEXT("AnimMontage'/Game/Book/Animations/WarriorAnimMontage.WarriorAnimMontage'"));
 	if (ATTACK_MONTAGE.Succeeded())
 	{
-		AttackMontage = ATTACK_MONTAGE.Object;
+		WarriorAnimMontage = ATTACK_MONTAGE.Object;
 	}
 
 }
@@ -36,12 +36,22 @@ void UBTAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 void UBTAnimInstance::PlayAttackMontage()
 {
-	Montage_Play(AttackMontage, 1.f);
+	Montage_Play(WarriorAnimMontage, 1.f);
 }
 
 void UBTAnimInstance::JumpToAttackMontageSection(int32 NewSection)
 {
-	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), AttackMontage);
+	//여기서 Attack2로 점프가 안된다.
+	//아니 해결이 됐다.. Attack2로 점프하기 전에.
+	//즉 NextAttackCheck노티파이가 이 함수를 호출하는데
+	//노티파이가 호출되고 몽타주가 끝날때까지 타이밍이 짧아서 점프 함수가 호출되기
+	//전에 몽타주가 끝나버려서 점프를 못함... 그래서 현재 몽타주를 보니까 None이 나오는 거였네
+	//NextAttackCheck 노티파이 시간을 땡겨서 해결ㅋㅋ
+
+	//근데 그러면 콤보를 넣기 위해서 필요로 하는 클릭 시간이 빡빡해진다.
+	//그래서 노티파이 시간은 두고 애니메이션이 끝나는 시간을 늘려버림. 끝
+
+	Montage_JumpToSection(GetAttackMontageSectionName(NewSection), WarriorAnimMontage);
 }
 
 void UBTAnimInstance::AnimNotify_AttackHitCheck()
@@ -56,5 +66,6 @@ void UBTAnimInstance::AnimNotify_NextAttackCheck()
 
 FName UBTAnimInstance::GetAttackMontageSectionName(int32 Section)
 {
+	UE_LOG(LogTemp, Log, TEXT("Attack%d"), Section);
 	return FName(*FString::Printf(TEXT("Attack%d"), Section));
 }

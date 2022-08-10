@@ -144,10 +144,8 @@ void ABTCharacter::Attack()
 	{
 		AttackStartComboState();
 		BTAnim->PlayAttackMontage();
-		BTAnim->JumpToAttackMontageSection(CurrentCombo);
 		IsAttacking = true;
 	}
-	UE_LOG(LogTemp, Log, TEXT("CurrentCombo: %d"), CurrentCombo);
 }
 
 void ABTCharacter::PostInitializeComponents()
@@ -156,15 +154,17 @@ void ABTCharacter::PostInitializeComponents()
 	BTAnim = Cast<UBTAnimInstance>(GetMesh()->GetAnimInstance());
 
 	BTAnim->OnMontageEnded.AddDynamic(this, &ABTCharacter::OnAttackMontageEnded);
-
+	FString SectionName = BTAnim->Montage_GetCurrentSection(BTAnim->WarriorAnimMontage).ToString();
+	UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
 	BTAnim->OnNextAttackCheck.AddLambda([this]() -> void {
 		CanNextCombo = false;
-		UE_LOG(LogTemp, Log, TEXT("OnNextAttackCheck"));
 		if (IsComboInputOn)
 		{
+			UE_LOG(LogTemp, Log, TEXT("OnNextAttackCheck"));
 			AttackStartComboState();
 			BTAnim->JumpToAttackMontageSection(CurrentCombo);
-
+			FString SectionName = BTAnim->Montage_GetCurrentSection(BTAnim->WarriorAnimMontage).ToString();
+			UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
 		}
 		});
 }
@@ -217,7 +217,9 @@ void ABTCharacter::AttackStartComboState()
 {
 	CanNextCombo = true;
 	IsComboInputOn = false;
-	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
+	CurrentCombo = CurrentCombo + 1;
+	UE_LOG(LogTemp, Log, TEXT("CurrentCombo: %d"), CurrentCombo);
+
 }
 
 void ABTCharacter::AttackEndComboState()

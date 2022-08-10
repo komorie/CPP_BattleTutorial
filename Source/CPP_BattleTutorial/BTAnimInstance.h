@@ -40,9 +40,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pawn, Meta = (AllowPrivateAccess = true))
 	bool IsFalling;
-
+public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
-	UAnimMontage* AttackMontage;
+	UAnimMontage* WarriorAnimMontage;
 
 public:
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
