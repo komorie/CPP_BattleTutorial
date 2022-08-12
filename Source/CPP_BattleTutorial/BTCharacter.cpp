@@ -7,6 +7,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DrawDebugHelpers.h"
+
 
 
 // Sets default values
@@ -46,6 +48,9 @@ ABTCharacter::ABTCharacter()
 	IsAttacking = false;
 	MaxCombo = 4;
 	AttackEndComboState();
+
+	AttackRange = 200.0f;
+	AttackRadius = 50.0f;
 }
 
 // Called when the game starts or when spawned
@@ -156,17 +161,30 @@ void ABTCharacter::AttackCheck()
 	bool bResult = GetWorld()->SweepSingleByChannel(
 		HitResult,
 		GetActorLocation(),
-		GetActorLocation() + GetActorForwardVector() * 200.0f,
+		GetActorLocation() + GetActorForwardVector() * AttackRange,
 		FQuat::Identity,
 		ECollisionChannel::ECC_GameTraceChannel2,
-		FCollisionShape::MakeSphere(50.0f),
+		FCollisionShape::MakeSphere(AttackRadius),
 		Params);
+
+	#if ENABLE_DRAW_DEBUG
+		FVector TraceVec = GetActorForwardVector() * AttackRange;
+		FVector Center = GetActorLocation() + TraceVec * 0.5f;
+		float HalfHeight = AttackRange * 0.5 + AttackRadius;
+		FQuat CapsuleRot = FRotationMatrix::MakeFromZ(TraceVec).ToQuat();
+		FColor DrawColor = bResult ? FColor::Green : FColor::Red;
+		float DebugLifeTime = 5.0f;
+
+		DrawDebugCapsule(GetWorld(), Center, HalfHeight, AttackRadius, CapsuleRot, DrawColor, false, DebugLifeTime);
+	#endif
 
 	if (bResult)
 	{
 		if (HitResult.Actor.IsValid())
 		{
 			UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
+			FDamageEvent DamageEvent;
+			HitResult.Actor->TakeDamage(50.0f, DamageEvent, GetController(), this);
 		}
 	}
 }
@@ -191,6 +209,13 @@ void ABTCharacter::PostInitializeComponents()
 		}
 	});
 	BTAnim->OnAttackHitCheck.AddUObject(this, &ABTCharacter::AttackCheck);
+}
+
+float ABTCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogTemp, Log, TEXT("Actor : %s took Damage : %f"), *GetName(), FinalDamage);
+	return FinalDamage;
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
