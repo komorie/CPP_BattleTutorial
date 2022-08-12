@@ -34,6 +34,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void PostInitializeComponents() override;
+
 private:
 	UFUNCTION()
 	void UpDown(float value);
@@ -50,7 +52,8 @@ private:
 	
 	void Attack();
 
-	virtual void PostInitializeComponents() override;
+	void AttackCheck();
+
 
 protected:
 	void SetControlMode(EControlMode NewControlMode);

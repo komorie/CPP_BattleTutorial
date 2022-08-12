@@ -16,6 +16,8 @@ ABTCharacter::ABTCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("BTCharacter"));
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	SpringArm->TargetArmLength = 400.f;
@@ -29,15 +31,13 @@ ABTCharacter::ABTCharacter()
 	{
 		GetMesh()->SetSkeletalMesh(SK_CARDBOARD.Object);
 	}
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
-
-	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-
 	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(TEXT("/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
 	if (WARRIOR_ANIM.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(WARRIOR_ANIM.Class);
 	}
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
 	SetControlMode(EControlMode::Quarter);
 
@@ -75,6 +75,7 @@ void ABTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction(TEXT("ViewChange"), IE_Pressed , this, &ABTCharacter::ViewChange);
 	PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ABTCharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &ABTCharacter::Attack);
+
 }
 
 void ABTCharacter::UpDown(float value)
@@ -148,14 +149,36 @@ void ABTCharacter::Attack()
 	}
 }
 
+void ABTCharacter::AttackCheck()
+{
+	FHitResult HitResult;
+	FCollisionQueryParams Params(NAME_None, false, this);
+	bool bResult = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		GetActorLocation(),
+		GetActorLocation() + GetActorForwardVector() * 200.0f,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(50.0f),
+		Params);
+
+	if (bResult)
+	{
+		if (HitResult.Actor.IsValid())
+		{
+			UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
+		}
+	}
+}
+
 void ABTCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	BTAnim = Cast<UBTAnimInstance>(GetMesh()->GetAnimInstance());
 
 	BTAnim->OnMontageEnded.AddDynamic(this, &ABTCharacter::OnAttackMontageEnded);
-	FString SectionName = BTAnim->Montage_GetCurrentSection(BTAnim->WarriorAnimMontage).ToString();
-	UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
+	//FString SectionName = BTAnim->Montage_GetCurrentSection(BTAnim->WarriorAnimMontage).ToString();
+	//UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
 	BTAnim->OnNextAttackCheck.AddLambda([this]() -> void {
 		CanNextCombo = false;
 		if (IsComboInputOn)
@@ -166,7 +189,8 @@ void ABTCharacter::PostInitializeComponents()
 			FString SectionName = BTAnim->Montage_GetCurrentSection(BTAnim->WarriorAnimMontage).ToString();
 			UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
 		}
-		});
+	});
+	BTAnim->OnAttackHitCheck.AddUObject(this, &ABTCharacter::AttackCheck);
 }
 
 void ABTCharacter::SetControlMode(EControlMode NewControlMode)
