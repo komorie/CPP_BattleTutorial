@@ -9,11 +9,14 @@ UBTAnimInstance::UBTAnimInstance()
 {
 	CurrentPawnSpeed = 0.f;
 	IsFalling = false;
+	IsDead = false;
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>ATTACK_MONTAGE(TEXT("AnimMontage'/Game/Book/Animations/WarriorAnimMontage.WarriorAnimMontage'"));
 	if (ATTACK_MONTAGE.Succeeded())
 	{
 		WarriorAnimMontage = ATTACK_MONTAGE.Object;
 	}
+
+
 
 }
 
@@ -23,12 +26,17 @@ void UBTAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	auto Pawn = TryGetPawnOwner();
 
-	if (IsValid(Pawn))
+	if (!IsValid(Pawn))
+	{
+		return;
+	}
+
+	if (!IsDead)
 	{
 		CurrentPawnSpeed = Pawn->GetVelocity().Size();
-		if (Pawn)
+		auto PlayerCharacter = Cast<ACharacter>(Pawn);
+		if (PlayerCharacter)
 		{
-			auto PlayerCharacter = Cast<ACharacter>(Pawn);
 			IsFalling = PlayerCharacter->GetMovementComponent()->IsFalling();
 		}
 	}
@@ -66,6 +74,6 @@ void UBTAnimInstance::AnimNotify_NextAttackCheck()
 
 FName UBTAnimInstance::GetAttackMontageSectionName(int32 Section)
 {
-	UE_LOG(LogTemp, Log, TEXT("Attack%d"), Section);
+	//UE_LOG(LogTemp, Log, TEXT("Attack%d"), Section);
 	return FName(*FString::Printf(TEXT("Attack%d"), Section));
 }

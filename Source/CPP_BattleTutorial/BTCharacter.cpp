@@ -201,11 +201,11 @@ void ABTCharacter::PostInitializeComponents()
 		CanNextCombo = false;
 		if (IsComboInputOn)
 		{
-			UE_LOG(LogTemp, Log, TEXT("OnNextAttackCheck"));
+			//UE_LOG(LogTemp, Log, TEXT("OnNextAttackCheck"));
 			AttackStartComboState();
 			BTAnim->JumpToAttackMontageSection(CurrentCombo);
 			FString SectionName = BTAnim->Montage_GetCurrentSection(BTAnim->WarriorAnimMontage).ToString();
-			UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
+			//UE_LOG(LogTemp, Log, TEXT("Section: %s"), *SectionName);
 		}
 	});
 	BTAnim->OnAttackHitCheck.AddUObject(this, &ABTCharacter::AttackCheck);
@@ -215,6 +215,13 @@ float ABTCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 {
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	UE_LOG(LogTemp, Log, TEXT("Actor : %s took Damage : %f"), *GetName(), FinalDamage);
+	
+	if (FinalDamage > 0.0f)
+	{
+		BTAnim->SetDeadAnim();
+		SetActorEnableCollision(false);
+	}
+	
 	return FinalDamage;
 }
 
