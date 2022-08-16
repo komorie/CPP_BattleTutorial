@@ -41,6 +41,21 @@ ABTCharacter::ABTCharacter()
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
+	//순서에 주의. 캐릭터의 skeletalmesh를 먼저 지정하고, 소켓을 찾아야 한다.
+	FName WeaponSocket(TEXT("hand_rSocket"));
+	UE_LOG(LogTemp, Log, TEXT("%s"), GetMesh()->DoesSocketExist(WeaponSocket) ? TEXT("true") : TEXT("false"));
+	if (GetMesh()->DoesSocketExist(WeaponSocket))
+	{
+		Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
+		static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Blade/Swords/Blade_BlackKnight/SK_Blade_BlackKnight.SK_Blade_BlackKnight'"));
+		if (SK_WEAPON.Succeeded())
+		{
+			Weapon->SetSkeletalMesh(SK_WEAPON.Object);
+		}
+		UE_LOG(LogTemp, Log, TEXT("%s"), GetMesh()->DoesSocketExist(WeaponSocket) ? TEXT("true") : TEXT("false"));
+		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
+	}
+
 	SetControlMode(EControlMode::Quarter);
 
 	GetCharacterMovement()->JumpZVelocity = 600.f;
