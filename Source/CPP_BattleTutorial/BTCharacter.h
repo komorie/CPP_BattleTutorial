@@ -74,8 +74,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, Category = Weapon)
-	class USkeletalMeshComponent* Weapon;
+	/*UPROPERTY(VisibleAnywhere, Category = Weapon)
+	class USkeletalMeshComponent* Weapon;*/
 
 	UPROPERTY(EditAnywhere, Category = Camera)
 	EControlMode CurrentControlMode;

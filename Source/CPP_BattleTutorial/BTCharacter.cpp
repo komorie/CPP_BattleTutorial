@@ -3,6 +3,7 @@
 
 #include "BTCharacter.h"
 #include "BTAnimInstance.h"
+#include "BTWeapon.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -42,7 +43,7 @@ ABTCharacter::ABTCharacter()
 	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
 	//순서에 주의. 캐릭터의 skeletalmesh를 먼저 지정하고, 소켓을 찾아야 한다.
-	FName WeaponSocket(TEXT("hand_rSocket"));
+	/*FName WeaponSocket(TEXT("hand_rSocket"));
 	UE_LOG(LogTemp, Log, TEXT("%s"), GetMesh()->DoesSocketExist(WeaponSocket) ? TEXT("true") : TEXT("false"));
 	if (GetMesh()->DoesSocketExist(WeaponSocket))
 	{
@@ -54,7 +55,14 @@ ABTCharacter::ABTCharacter()
 		}
 		UE_LOG(LogTemp, Log, TEXT("%s"), GetMesh()->DoesSocketExist(WeaponSocket) ? TEXT("true") : TEXT("false"));
 		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
-	}
+	}*/
+
+	FName WeaponSocket(TEXT("hand_rSocket"));
+	/*auto CurWeapon = GetWorld()->SpawnActor<ABTWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);*/
+	//if (CurWeapon)
+	//{
+	//	CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+	//}
 
 	SetControlMode(EControlMode::Quarter);
 
