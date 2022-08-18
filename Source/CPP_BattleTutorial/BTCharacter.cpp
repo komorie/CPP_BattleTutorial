@@ -57,13 +57,6 @@ ABTCharacter::ABTCharacter()
 		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
 	}*/
 
-	FName WeaponSocket(TEXT("hand_rSocket"));
-	/*auto CurWeapon = GetWorld()->SpawnActor<ABTWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);*/
-	//if (CurWeapon)
-	//{
-	//	CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
-	//}
-
 	SetControlMode(EControlMode::Quarter);
 
 	GetCharacterMovement()->JumpZVelocity = 600.f;
@@ -81,6 +74,16 @@ void ABTCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//주의!! GetWorld 함수의 경우 캐릭터가 스폰된 월드를 리턴하는데, 
+	//null을 리턴해서 오류가 났다. 
+	//보니까 생성자에서 사용해서 아직 액터가 스폰이 안되서 그런듯.
+	// PostInitializeComponents에서 함수를 사용하는 걸로 해결
+	FName WeaponSocket(TEXT("hand_rSocket"));
+	auto CurWeapon = GetWorld()->SpawnActor<ABTWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+	if (CurWeapon)
+	{
+		CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+	}
 }
 
 // Called every frame

@@ -12,11 +12,15 @@ ABTWeapon::ABTWeapon()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WEAPON"));
 	RootComponent = Weapon;
 
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Blade/Swords/Blade_BlackWyrmBlade/SK_Blade_BlackWyrmBlade.SK_Blade_BlackWyrmBlade'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_WEAPON(TEXT("SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Blade/Swords/Blade_BlackKnight/SK_Blade_BlackKnight.SK_Blade_BlackKnight'"));
 
 	if (SK_WEAPON.Succeeded())
 	{
 		Weapon->SetSkeletalMesh(SK_WEAPON.Object);
+		UE_LOG(LogTemp, Log, TEXT("true"));
+	}
+	else {
+		UE_LOG(LogTemp, Log, TEXT("false"));
 	}
 	Weapon->SetCollisionProfileName(TEXT("NoCollision"));
 }
