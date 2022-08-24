@@ -19,9 +19,6 @@ ABTWeapon::ABTWeapon()
 		Weapon->SetSkeletalMesh(SK_WEAPON.Object);
 		UE_LOG(LogTemp, Log, TEXT("true"));
 	}
-	else {
-		UE_LOG(LogTemp, Log, TEXT("false"));
-	}
 	Weapon->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
