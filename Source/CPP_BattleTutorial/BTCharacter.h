@@ -37,8 +37,10 @@ public:
 	virtual void PostInitializeComponents() override;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	
+	bool CanSetWeapon();
 
-
+	void SetWeapon(class ABTWeapon* NewWeapon);
 private:
 	UFUNCTION()
 	void UpDown(float value);
@@ -57,7 +59,6 @@ private:
 
 	void AttackCheck();
 
-
 protected:
 	void SetControlMode(EControlMode NewControlMode);
 
@@ -74,8 +75,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class UCameraComponent* Camera;
 
-	/*UPROPERTY(VisibleAnywhere, Category = Weapon)
-	class USkeletalMeshComponent* Weapon;*/
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	class ABTWeapon* CurrentWeapon;
 
 	UPROPERTY(EditAnywhere, Category = Camera)
 	EControlMode CurrentControlMode;
@@ -103,5 +104,7 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	float AttackRadius;
+
+
 
 };

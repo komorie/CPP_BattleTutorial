@@ -78,12 +78,12 @@ void ABTCharacter::BeginPlay()
 	//null을 리턴해서 오류가 났다. 
 	//보니까 생성자에서 사용해서 아직 액터가 스폰이 안되서 그런듯.
 	// PostInitializeComponents에서 함수를 사용하는 걸로 해결
-	FName WeaponSocket(TEXT("hand_rSocket"));
-	auto CurWeapon = GetWorld()->SpawnActor<ABTWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
-	if (CurWeapon)
-	{
-		CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
-	}
+	//FName WeaponSocket(TEXT("hand_rSocket"));
+	//auto CurWeapon = GetWorld()->SpawnActor<ABTWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+	//if (CurWeapon)
+	//{
+	//	CurWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+	//}
 }
 
 // Called every frame
@@ -212,6 +212,22 @@ void ABTCharacter::AttackCheck()
 			FDamageEvent DamageEvent;
 			HitResult.Actor->TakeDamage(50.0f, DamageEvent, GetController(), this);
 		}
+	}
+}
+
+bool ABTCharacter::CanSetWeapon()
+{
+	return (nullptr == CurrentWeapon);
+}
+
+void ABTCharacter::SetWeapon(ABTWeapon* NewWeapon)
+{
+	FName WeaponSocket(TEXT("hand_rSocket"));
+	if (nullptr != NewWeapon)
+	{
+		NewWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocket);
+		NewWeapon->SetOwner(this);
+		CurrentWeapon = NewWeapon;
 	}
 }
 

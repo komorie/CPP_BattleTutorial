@@ -26,10 +26,14 @@ public:
 
 	virtual void PostInitializeComponents() override;
 
+private:
 	UFUNCTION()
 	void OnCharacterOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-public:
+	UFUNCTION()
+	void OnEffectFinished(class UParticleSystemComponent* PSystem);
+
+private:
 	UPROPERTY(VisibleAnywhere, Category = Box)
 	class UBoxComponent* Trigger;
 
@@ -39,4 +43,6 @@ public:
 	UPROPERTY(EditInstanceOnly, Category = Box)
 	TSubclassOf<class ABTWeapon> WeaponItemClass;
 
+	UPROPERTY(VisibleAnywhere, Category = Effect)
+	class UParticleSystemComponent* Effect;
 };
