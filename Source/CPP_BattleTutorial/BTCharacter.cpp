@@ -4,6 +4,8 @@
 #include "BTCharacter.h"
 #include "BTAnimInstance.h"
 #include "BTWeapon.h"
+#include "BTCharacterStatComponent.h"
+#include "BTGameInstance.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -56,6 +58,8 @@ ABTCharacter::ABTCharacter()
 		UE_LOG(LogTemp, Log, TEXT("%s"), GetMesh()->DoesSocketExist(WeaponSocket) ? TEXT("true") : TEXT("false"));
 		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
 	}*/
+
+	CharacterStat = CreateDefaultSubobject<UBTCharacterStatComponent>(TEXT("CHARACTERSTAT"));
 
 	SetControlMode(EControlMode::Quarter);
 
