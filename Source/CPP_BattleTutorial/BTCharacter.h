@@ -78,9 +78,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	class ABTWeapon* CurrentWeapon;
 
-	UPROPERTY(VisibleAnywhere, Category = Stat)
-	class UBTCharacterStatComponent* CharacterStat;
-
 	UPROPERTY(EditAnywhere, Category = Camera)
 	EControlMode CurrentControlMode;
 
