@@ -6,8 +6,8 @@
 UBTGameInstance::UBTGameInstance()
 {
     FString CharacterDataPath = TEXT("/Game/Book/GameData/ABCharacterData.ABCharacterData");
-    static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABCHARACTER(*CharacterDataPath);
-    BTCharacterTable = DT_ABCHARACTER.Object;
+    static ConstructorHelpers::FObjectFinder<UDataTable> DT_BTCHARACTER(*CharacterDataPath);
+    BTCharacterTable = DT_BTCHARACTER.Object;
 
     //if (BTCharacterTable->GetRowMap().Num() > 0)
     //{

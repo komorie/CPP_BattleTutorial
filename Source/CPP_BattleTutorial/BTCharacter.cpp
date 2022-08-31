@@ -4,6 +4,7 @@
 #include "BTCharacter.h"
 #include "BTAnimInstance.h"
 #include "BTWeapon.h"
+#include "BTCharacterStatComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -56,6 +57,8 @@ ABTCharacter::ABTCharacter()
 		UE_LOG(LogTemp, Log, TEXT("%s"), GetMesh()->DoesSocketExist(WeaponSocket) ? TEXT("true") : TEXT("false"));
 		Weapon->SetupAttachment(GetMesh(), WeaponSocket);
 	}*/
+
+	CharacterStat = CreateDefaultSubobject<UBTCharacterStatComponent>(TEXT("CHARACTERSTAT"));
 
 	SetControlMode(EControlMode::Quarter);
 
@@ -210,7 +213,8 @@ void ABTCharacter::AttackCheck()
 		{
 			UE_LOG(LogTemp, Log, TEXT("Hit Actor Name : %s"), *HitResult.Actor->GetName());
 			FDamageEvent DamageEvent;
-			HitResult.Actor->TakeDamage(50.0f, DamageEvent, GetController(), this);
+			HitResult.Actor->TakeDamage(CharacterStat->GetAttack(), DamageEvent, GetController(), this);
+
 		}
 	}
 }
@@ -251,6 +255,11 @@ void ABTCharacter::PostInitializeComponents()
 		}
 	});
 	BTAnim->OnAttackHitCheck.AddUObject(this, &ABTCharacter::AttackCheck);
+
+	CharacterStat->OnHPIsZero.AddLambda([this]() -> void {
+		BTAnim->SetDeadAnim();
+		SetActorEnableCollision(false);
+	});
 }
 
 float ABTCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -258,12 +267,10 @@ float ABTCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	UE_LOG(LogTemp, Log, TEXT("Actor : %s took Damage : %f"), *GetName(), FinalDamage);
 	
-	if (FinalDamage > 0.0f)
-	{
-		BTAnim->SetDeadAnim();
-		SetActorEnableCollision(false);
-	}
+
 	
+	CharacterStat->SetDamage(FinalDamage);
+
 	return FinalDamage;
 }
 
