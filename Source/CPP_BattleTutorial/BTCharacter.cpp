@@ -5,9 +5,11 @@
 #include "BTAnimInstance.h"
 #include "BTWeapon.h"
 #include "BTCharacterStatComponent.h"
+#include "BTCharacterWidget.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 
@@ -29,6 +31,7 @@ ABTCharacter::ABTCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	Camera->SetupAttachment(SpringArm);
+
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_CARDBOARD(TEXT("SkeletalMesh'/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard'"));
 	if (SK_CARDBOARD.Succeeded())
@@ -70,6 +73,19 @@ ABTCharacter::ABTCharacter()
 
 	AttackRange = 200.0f;
 	AttackRadius = 50.0f;
+
+	HPBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBARWIDGET"));
+
+	HPBarWidget->SetupAttachment(GetMesh());
+
+	HPBarWidget->SetRelativeLocation(FVector(0.0f, 0.0f, 180.0f));
+	HPBarWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	static ConstructorHelpers::FClassFinder<UUserWidget> UI_HUD(TEXT("/Game/Book/UI/UI_HPBar.UI_HPBar_C"));
+	if (UI_HUD.Succeeded())
+	{
+		HPBarWidget->SetWidgetClass(UI_HUD.Class);
+		HPBarWidget->SetDrawSize(FVector2D(150.0f, 50.0f));
+	}
 }
 
 // Called when the game starts or when spawned
@@ -77,6 +93,12 @@ void ABTCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	auto CharacterWidget = Cast<UBTCharacterWidget>(HPBarWidget->GetUserWidgetObject());
+	if (nullptr != CharacterWidget)
+	{
+		CharacterWidget->BindCharacterStat(CharacterStat);
+	}
+
 	//주의!! GetWorld 함수의 경우 캐릭터가 스폰된 월드를 리턴하는데, 
 	//null을 리턴해서 오류가 났다. 
 	//보니까 생성자에서 사용해서 아직 액터가 스폰이 안되서 그런듯.

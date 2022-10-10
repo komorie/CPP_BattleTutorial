@@ -81,6 +81,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Stat)
 	class UBTCharacterStatComponent* CharacterStat;
 
+	UPROPERTY(VisibleAnywhere, Category = UI)
+	class UWidgetComponent* HPBarWidget;
+
 	UPROPERTY(EditAnywhere, Category = Camera)
 	EControlMode CurrentControlMode;
 
