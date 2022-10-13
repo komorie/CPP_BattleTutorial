@@ -6,6 +6,7 @@
 #include "BTWeapon.h"
 #include "BTCharacterStatComponent.h"
 #include "BTCharacterWidget.h"
+#include "BTAIController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -86,6 +87,12 @@ ABTCharacter::ABTCharacter()
 		HPBarWidget->SetWidgetClass(UI_HUD.Class);
 		HPBarWidget->SetDrawSize(FVector2D(150.0f, 50.0f));
 	}
+
+	/*캐릭터의 AI 컨트롤러 클래스를 BTAIController 클래스로 설정.
+	배치되거나 생성되는 캐릭터마다 자동으로 BTAIController가 생성 후 빙의.*/
+	AIControllerClass = ABTAIController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 }
 
 // Called when the game starts or when spawned

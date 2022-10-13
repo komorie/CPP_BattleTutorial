@@ -8,7 +8,6 @@
 void UBTCharacterWidget::BindCharacterStat(UBTCharacterStatComponent* NewCharacterStat)
 {
 	CurrentCharacterStat = NewCharacterStat;
-
 	NewCharacterStat->OnHPChanged.AddUObject(this, &UBTCharacterWidget::UpdateHPWidget);
 }
 
@@ -23,8 +22,9 @@ void UBTCharacterWidget::UpdateHPWidget()
 {
 	if (CurrentCharacterStat.IsValid())
 	{
-		if (nullptr != HPProgressBar)
+		if (nullptr != HPProgressBar) //?
 		{
+			UE_LOG(LogTemp, Log, TEXT("widget"));
 			HPProgressBar->SetPercent(CurrentCharacterStat->GetHPRatio());
 		}
 	}
