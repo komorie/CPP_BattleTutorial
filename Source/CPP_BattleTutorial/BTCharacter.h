@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "BTCharacter.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate);
+
 UENUM()
 enum class EControlMode
 {
@@ -41,6 +43,10 @@ public:
 	bool CanSetWeapon();
 
 	void SetWeapon(class ABTWeapon* NewWeapon);
+
+	void Attack();
+	FOnAttackEndDelegate OnAttackEnd;
+
 private:
 	UFUNCTION()
 	void UpDown(float value);
@@ -54,8 +60,6 @@ private:
 	void ViewChange();
 
 	void Jump();
-	
-	void Attack();
 
 	void AttackCheck();
 
