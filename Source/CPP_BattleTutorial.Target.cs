@@ -9,6 +9,6 @@ public class CPP_BattleTutorialTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "CPP_BattleTutorial", "CPP_BattleTutorialSetting" } );
+		ExtraModuleNames.AddRange( new string[] { "CPP_BattleTutorial"} );
 	}
 }
