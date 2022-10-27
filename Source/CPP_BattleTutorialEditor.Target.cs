@@ -9,6 +9,6 @@ public class CPP_BattleTutorialEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "CPP_BattleTutorial" } );
+		ExtraModuleNames.AddRange( new string[] { "CPP_BattleTutorial", "CPP_BattleSetting" });
 	}
 }

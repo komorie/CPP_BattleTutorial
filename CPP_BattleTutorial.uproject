@@ -5,13 +5,23 @@
 	"Description": "",
 	"Modules": [
 		{
+			"Name": "CPP_BattleSetting",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"AdditionalDependencies": [
+				"CoreUObject"
+			]
+		},
+		{
 			"Name": "CPP_BattleTutorial",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
 				"UMG",
-				"AIModule"
+				"AIModule",
+				"CPP_BattleSetting",
+				"CoreUObject"
 			]
 		}
 	]
