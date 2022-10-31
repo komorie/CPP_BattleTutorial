@@ -3,3 +3,6 @@
 
 #include "BTCharacterSetting.h"
 
+UBTCharacterSetting::UBTCharacterSetting()
+{
+}

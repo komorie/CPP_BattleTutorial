@@ -7,6 +7,7 @@
 #include "BTCharacterStatComponent.h"
 #include "BTCharacterWidget.h"
 #include "BTAIController.h"
+#include "BTCharacterSetting.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -92,6 +93,17 @@ ABTCharacter::ABTCharacter()
 	배치되거나 생성되는 캐릭터마다 자동으로 BTAIController가 생성 후 빙의.*/
 	AIControllerClass = ABTAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+
+	//캐릭터 에셋 정보가 저장된 디폴트 생성 클래스에서 가져오기
+	auto DefaultSetting = GetDefault<UBTCharacterSetting>();
+	if (DefaultSetting->CharacterAssets.Num() > 0)
+	{
+		for (auto CharacterAsset : DefaultSetting->CharacterAssets)
+		{
+			UE_LOG(LogTemp, Log, TEXT("Character Asset : %s"), *CharacterAsset.ToString());
+		}
+	}
 
 }
 
