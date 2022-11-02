@@ -63,6 +63,8 @@ private:
 
 	void AttackCheck();
 
+	void OnAssetLoadCompleted();
+
 protected:
 	void SetControlMode(EControlMode NewControlMode);
 
@@ -73,6 +75,9 @@ protected:
 	void AttackEndComboState();
 
 private:
+	FSoftObjectPath CharacterAssetToLoad = FSoftObjectPath(nullptr);
+	TSharedPtr<struct FStreamableHandle> AssetStreamingHandle;
+
 	UPROPERTY(EditAnywhere, Category = Camera)
 	class USpringArmComponent* SpringArm;
 

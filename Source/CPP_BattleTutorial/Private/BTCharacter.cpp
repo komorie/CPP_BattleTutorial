@@ -14,6 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/AssetManager.h"
 
 
 
@@ -95,15 +96,18 @@ ABTCharacter::ABTCharacter()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 
-	//캐릭터 에셋 정보가 저장된 디폴트 생성 클래스에서 가져오기
-	auto DefaultSetting = GetDefault<UBTCharacterSetting>();
-	if (DefaultSetting->CharacterAssets.Num() > 0)
-	{
-		for (auto CharacterAsset : DefaultSetting->CharacterAssets)
-		{
-			UE_LOG(LogTemp, Log, TEXT("Character Asset : %s"), *CharacterAsset.ToString());
-		}
-	}
+	////캐릭터 에셋 정보가 저장된 디폴트 생성 클래스에서 가져오기
+	//auto DefaultSetting = GetDefault<UBTCharacterSetting>();
+	//if (DefaultSetting->CharacterAssets.Num() > 0)
+	//{
+	//	for (auto CharacterAsset : DefaultSetting->CharacterAssets)
+	//	{
+	//		UE_LOG(LogTemp, Log, TEXT("Character Asset : %s"), *CharacterAsset.ToString());
+	//	}
+	//}
+
+
+
 
 }
 
@@ -112,6 +116,18 @@ void ABTCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (!IsPlayerControlled())
+	{
+		//NPC 캐릭터일 때, 캐릭터 에셋 정보가 저장된 디폴트 생성 클래스에서 가져오기
+		auto DefaultSetting = GetDefault<UBTCharacterSetting>();
+		int32 RandIndex = FMath::RandRange(0, DefaultSetting->CharacterAssets.Num() - 1);
+		CharacterAssetToLoad = DefaultSetting->CharacterAssets[RandIndex];
+		UE_LOG(LogTemp, Log, TEXT("%s"), *CharacterAssetToLoad.ToString());
+		AssetStreamingHandle = UAssetManager::GetStreamableManager()
+			.RequestAsyncLoad(CharacterAssetToLoad, FStreamableDelegate::CreateUObject(this, &ABTCharacter::OnAssetLoadCompleted));
+	}
+
+
 	auto CharacterWidget = Cast<UBTCharacterWidget>(HPBarWidget->GetUserWidgetObject());
 	if (nullptr != CharacterWidget)
 	{
@@ -257,6 +273,16 @@ void ABTCharacter::AttackCheck()
 			HitResult.Actor->TakeDamage(CharacterStat->GetAttack(), DamageEvent, GetController(), this);
 
 		}
+	}
+}
+
+void ABTCharacter::OnAssetLoadCompleted()
+{
+	USkeletalMesh* AssetLoaded = Cast<USkeletalMesh>(AssetStreamingHandle->GetLoadedAsset());
+	AssetStreamingHandle.Reset();
+	if (nullptr != AssetLoaded)
+	{
+		GetMesh()->SetSkeletalMesh(AssetLoaded);
 	}
 }
 
