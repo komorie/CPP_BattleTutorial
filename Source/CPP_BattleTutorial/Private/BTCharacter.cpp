@@ -118,7 +118,7 @@ void ABTCharacter::BeginPlay()
 	
 	if (!IsPlayerControlled())
 	{
-		//NPC 캐릭터일 때, 캐릭터 에셋 정보가 저장된 디폴트 생성 클래스에서 가져오기
+		//NPC 캐릭터일 때, 캐릭터 에셋 정보가 저장된 디폴트 생성 클래스에서 랜덤으로 에셋 가져오기
 		auto DefaultSetting = GetDefault<UBTCharacterSetting>();
 		int32 RandIndex = FMath::RandRange(0, DefaultSetting->CharacterAssets.Num() - 1);
 		CharacterAssetToLoad = DefaultSetting->CharacterAssets[RandIndex];

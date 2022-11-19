@@ -75,6 +75,7 @@ protected:
 	void AttackEndComboState();
 
 private:
+	//에셋 경로
 	FSoftObjectPath CharacterAssetToLoad = FSoftObjectPath(nullptr);
 	TSharedPtr<struct FStreamableHandle> AssetStreamingHandle;
 
